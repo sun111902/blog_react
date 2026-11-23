@@ -25,6 +25,32 @@ function App() {
   const [modal, setModal] = useState(false);
   const [input, setInput] = useState('');
 
+  const OpenModal = (i)=>{
+    setModal(true);
+    setPostnum(i);
+  }
+
+  const likeClick = (e, i)=>{
+    let copy = [...clickup];
+    copy[i] = clickup[i] + 1;
+    setClickup(copy);
+    e.stopPropagation();
+  }
+
+  const deleteBtn = (i)=>{
+    let copy = [...post];
+    copy.splice(i, 1);
+    setPost(copy);
+
+    let copy2 = [...clickup];
+    copy2.splice(i, 1);
+    setClickup(copy2);
+  }
+
+  const userInput = (e)=>{
+    setInput(e.target.value);
+  }
+
   const inserBtn = ()=>{
     let copy = [...post];
     copy.unshift({
@@ -50,35 +76,17 @@ function App() {
         {
           post.map((p, i)=>
             <div className="list" key={i}>
-              <h4 onClick={()=>{
-                setModal(true);
-                setPostnum(i);
-              }}>{p.title} 
-                <span onClick={(e)=>{
-                  let copy = [...clickup];
-                  copy[i] = clickup[i] + 1;
-                  setClickup(copy);
-                  e.stopPropagation();
-                }}>👍</span> {clickup[i]}
+              <h4 onClick={() => OpenModal(i)}>{p.title} 
+                <span onClick={(e) => likeClick(e, i)}>👍</span> {clickup[i]}
               </h4>
               <p>{p.date}</p>
 
-              <button onClick={()=>{
-                let copy = [...post];
-                copy.splice(i, 1);
-                setPost(copy);
-
-                let copy2 = [...clickup];
-                copy2.splice(i, 1);
-                setClickup(copy2);
-              }}>글 삭제</button>
+              <button onClick={() => deleteBtn(i)}>글 삭제</button>
             </div>
           )
         }  
 
-        <input type="text" onChange={(e)=>{
-          setInput(e.target.value);
-        }} value={input} />
+        <input type="text" onChange={userInput} value={input} />
 
         <button onClick={inserBtn}>글 추가</button>
 
